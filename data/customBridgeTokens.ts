@@ -32,12 +32,6 @@ export const customBridgeTokens: CustomBridgeToken[] = [
     l2Address: "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4",
     bridges: [
       {
-        label: "Orbiter",
-        iconUrl: "/img/orbiter.svg",
-        depositUrl: "https://www.orbiter.finance/?source=Ethereum&dest=zkSync%20Era&token=USDC",
-        withdrawUrl: "https://www.orbiter.finance/?source=zkSync%20Era&dest=Ethereum&token=USDC",
-      },
-      {
         label: "Symbiosis",
         iconUrl: "/img/symbiosis.svg",
         depositUrl: "https://app.symbiosis.finance/bridge",
