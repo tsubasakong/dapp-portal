@@ -49,7 +49,7 @@
           :tokens="availableTokens"
           :balances="availableBalances"
           :max-amount="maxAmount"
-          :approve-required="!enoughAllowance"
+          :approve-required="!enoughAllowance && !tokenCustomBridge"
           :loading="tokensRequestInProgress || balanceInProgress"
           class="mb-block-padding-1/2 sm:mb-block-gap"
         >
@@ -432,9 +432,13 @@ const tokenCustomBridge = computed(() => {
   if (!selectedToken.value) {
     return undefined;
   }
-  return customBridgeTokens.find(
+  const customBridgeToken = customBridgeTokens.find(
     (e) => eraNetwork.value.l1Network?.id === e.chainId && e.l1Address === selectedToken.value?.address
   );
+  if (!customBridgeToken?.bridges.some((e) => e.depositUrl)) {
+    return undefined;
+  }
+  return customBridgeToken;
 });
 const amountInputTokenAddress = computed({
   get: () => selectedToken.value?.address,

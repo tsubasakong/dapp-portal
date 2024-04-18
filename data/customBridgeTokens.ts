@@ -3,6 +3,7 @@ export type CustomBridgeToken = {
   l1Address: string;
   l2Address: string;
   symbol: string;
+  name?: string;
   bridges: {
     label: string;
     iconUrl: string;
@@ -25,6 +26,7 @@ export const customBridgeTokens: CustomBridgeToken[] = [
       },
     ],
     symbol: "wstETH",
+    name: "Wrapped liquid staked Ether 2.0",
   },
   {
     chainId: 1,
@@ -36,10 +38,9 @@ export const customBridgeTokens: CustomBridgeToken[] = [
         iconUrl: "/img/symbiosis.svg",
         depositUrl:
           "https://app.symbiosis.finance/swap?amountIn&chainIn=Ethereum&chainOut=ZkSync%20Era&tokenIn=0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&tokenOut=0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4",
-        withdrawUrl:
-          "https://app.symbiosis.finance/swap?chainIn=ZkSync%20Era&chainOut=Ethereum&tokenIn=0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4&tokenOut=0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       },
     ],
     symbol: "USDC",
+    name: "USD Coin",
   },
 ];

@@ -56,7 +56,7 @@
           :loading="tokensRequestInProgress || balanceInProgress"
         >
           <template v-if="type === 'withdrawal' && account.address" #token-dropdown-bottom>
-            <CommonAlert class="sticky bottom-0 mt-3" variant="neutral" :icon="InformationCircleIcon">
+            <CommonAlert class="sticky bottom-0 mt-6" variant="neutral" :icon="InformationCircleIcon">
               <p>Only tokens available for withdrawal are displayed</p>
             </CommonAlert>
           </template>
@@ -365,9 +365,13 @@ const tokenCustomBridge = computed(() => {
   if (props.type !== "withdrawal" && selectedToken.value) {
     return undefined;
   }
-  return customBridgeTokens.find(
+  const customBridgeToken = customBridgeTokens.find(
     (e) => eraNetwork.value.l1Network?.id === e.chainId && e.l1Address === selectedToken.value?.l1Address
   );
+  if (!customBridgeToken?.bridges.some((e) => e.withdrawUrl)) {
+    return undefined;
+  }
+  return customBridgeToken;
 });
 const amountInputTokenAddress = computed({
   get: () => selectedToken.value?.address,

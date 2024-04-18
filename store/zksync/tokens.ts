@@ -1,5 +1,7 @@
 import { $fetch } from "ofetch";
 
+import { customBridgeTokens } from "@/data/customBridgeTokens";
+
 import type { Api, Token } from "@/types";
 
 export const useZkSyncTokensStore = defineStore("zkSyncTokens", () => {
@@ -40,7 +42,14 @@ export const useZkSyncTokensStore = defineStore("zkSyncTokens", () => {
     return Object.fromEntries(
       tokensRaw.value
         .filter((e) => e.l1Address)
-        .map((token) => [token.l1Address!, { ...token, l1Address: undefined, address: token.l1Address! }])
+        .map((token) => {
+          const customBridgeToken = customBridgeTokens.find(
+            (e) => eraNetwork.value.l1Network?.id === e.chainId && token.l1Address === e.l1Address
+          );
+          const name = customBridgeToken?.name || token.name;
+          const symbol = customBridgeToken?.symbol || token.symbol;
+          return [token.l1Address!, { ...token, name, symbol, l1Address: undefined, address: token.l1Address! }];
+        })
     );
   });
 
