@@ -173,7 +173,7 @@ const withdrawalManualFinalizationRequired = computed(() => {
   );
 });
 const withdrawalFinalizationAvailable = computed(() => {
-  return withdrawalManualFinalizationRequired.value && props.transaction.info.withdrawalFinalizationAvailable;
+  return props.transaction.info.withdrawalFinalizationAvailable;
 });
 
 const {
