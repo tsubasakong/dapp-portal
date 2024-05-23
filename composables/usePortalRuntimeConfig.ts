@@ -1,6 +1,7 @@
 export const usePortalRuntimeConfig = () => {
   const runtimeConfig = window && window["##runtimeConfig"];
 
+  // Important: before adding new env variables, make sure to list them as public in `nuxt.config.ts`
   return {
     nodeType: runtimeConfig?.nodeType || (process.env.NODE_TYPE as undefined | "memory" | "dockerized" | "hyperchain"),
     walletConnectProjectId: runtimeConfig?.walletConnectProjectId || process.env.WALLET_CONNECT_PROJECT_ID,
