@@ -182,16 +182,7 @@
           </transition>
           <CommonButtonLabel v-if="!isCustomNode" as="span" class="ml-auto text-right">~15 minutes</CommonButtonLabel>
         </div>
-        <transition v-bind="TransitionAlertScaleInOutTransition">
-          <CommonAlert v-if="!enoughBalanceToCoverFee" class="mt-4" variant="error" :icon="ExclamationTriangleIcon">
-            <p>
-              Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
-              <span class="font-medium">{{ destinations.ethereum.label }}</span> to cover the fee
-            </p>
-            <NuxtLink :to="{ name: 'receive-methods' }" class="alert-link">Receive funds</NuxtLink>
-          </CommonAlert>
-        </transition>
-        <transition v-bind="TransitionAlertScaleInOutTransition">
+        <transition v-bind="TransitionAlertScaleInOutTransition" mode="out-in">
           <CommonAlert
             v-if="recommendedBalance && feeToken"
             class="mt-4"
@@ -210,6 +201,18 @@
                 {{ feeToken?.symbol }}</span
               >
               on {{ eraNetwork.l1Network?.name ?? "L1" }} for deposit.
+            </p>
+            <NuxtLink :to="{ name: 'receive-methods' }" class="alert-link">Receive funds</NuxtLink>
+          </CommonAlert>
+          <CommonAlert
+            v-else-if="!enoughBalanceToCoverFee"
+            class="mt-4"
+            variant="error"
+            :icon="ExclamationTriangleIcon"
+          >
+            <p>
+              Insufficient <span class="font-medium">{{ feeToken?.symbol }}</span> balance on
+              <span class="font-medium">{{ destinations.ethereum.label }}</span> to cover the fee
             </p>
             <NuxtLink :to="{ name: 'receive-methods' }" class="alert-link">Receive funds</NuxtLink>
           </CommonAlert>
@@ -455,9 +458,6 @@ const tokenCustomBridge = computed(() => {
   const customBridgeToken = customBridgeTokens.find(
     (e) => eraNetwork.value.l1Network?.id === e.chainId && e.l1Address === selectedToken.value?.address
   );
-  if (!customBridgeToken?.bridges.some((e) => e.depositUrl)) {
-    return undefined;
-  }
   return customBridgeToken;
 });
 const amountInputTokenAddress = computed({
