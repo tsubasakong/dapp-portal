@@ -18,6 +18,7 @@
 
     <div class="mt-5 flex flex-wrap items-center justify-center gap-block-gap">
       <CommonButton as="RouterLink" :to="{ name: 'assets' }" size="xs">Go to Assets page</CommonButton>
+      <CommonButton size="xs" as="RouterLink" :to="{ name: 'bridge' }">Bridge to {{ eraNetwork.name }}</CommonButton>
     </div>
   </div>
   <TransferView v-else type="withdrawal" />
