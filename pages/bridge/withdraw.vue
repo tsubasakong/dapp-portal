@@ -44,7 +44,7 @@ useSeoMeta({
 });
 
 const { eraNetwork } = storeToRefs(useZkSyncProviderStore());
-const withdrawalsDisabled = computed(() => eraNetwork.value.key === "mainnet");
+const withdrawalsDisabled = computed(() => false);
 </script>
 
 <style lang="scss" scoped></style>
