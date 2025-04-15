@@ -3,9 +3,8 @@
     class="cursor-pointer rounded-xl border border-gray-200 bg-gray-100 hover:bg-gray-200/50 dark:border-neutral-800/70 dark:bg-neutral-900 dark:hover:bg-neutral-800/80"
     @click="runQuote"
   >
-    <div class="flex gap-2 p-3">
-      <div class="basis-2/3">
-        <div class="mb-1 text-sm text-gray-600 dark:text-gray-400">via {{ quote.provider.name }}</div>
+    <div class="quote-grid grid gap-2 p-3">
+      <div class="amount-section">
         <div>
           <div>
             <span class="font-bold" :title="balance[1]">{{ balance[0] }} {{ quote.receive.token.symbol }}</span>
@@ -13,21 +12,26 @@
               &nbsp;~{{ formatFiat(quote.receive.amountFiat, quote.pay.currency) }}
             </span>
           </div>
-          <button
-            type="button"
-            class="p-0 text-sm text-neutral-500 underline hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-400"
-            @click="toggleDetails"
-          >
-            {{ toggleOpen ? "Hide details" : "View details" }}
-          </button>
         </div>
       </div>
-      <div class="hidden basis-1/3 items-center justify-end sm:flex">
+      <div class="details-section">
+        <button
+          type="button"
+          class="p-0 text-sm text-neutral-500 underline hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-400"
+          @click="toggleDetails"
+        >
+          {{ toggleOpen ? "Hide details" : "View details" }}
+        </button>
+      </div>
+      <div class="provider-section flex">
         <!-- <div class="inline-block p-2">
           <img :src="quote.provider.iconUrl" class="h-8 w-8" />
         </div> -->
-        <div class="inline-block">
-          <div>via {{ quote.provider.name }}</div>
+        <div class="payment-method inline-block text-right">
+          <div class="mb-1 text-xs leading-5 text-gray-600 dark:text-gray-400">
+            {{ parsePaymentMethod(quote.method) }}
+          </div>
+          <div class="text-xs text-gray-700 dark:text-gray-300">via {{ provider.name }}</div>
           <!-- <div class="text-sm text-gray-600 dark:text-gray-300">{{ providerType }}</div> -->
         </div>
       </div>
@@ -43,18 +47,48 @@
 </template>
 
 <script setup lang="ts">
+import { quoteToRoute, type PaymentMethod, type ProviderQuoteOption } from "zksync-easy-onramp";
+
 import { useOrderProcessingStore } from "@/store/on-ramp/order-processing";
 import StepDetail from "@/views/on-ramp/StepDetail.vue";
 
-import type { ProviderQuoteOption } from "zksync-easy-onramp";
-
 const props = defineProps<{
-  quote: ProviderQuoteOption;
+  quote: ProviderQuoteOption["paymentMethods"][0];
+  provider: ProviderQuoteOption["provider"];
 }>();
 
 const balance = computed(() => {
   return formatTokenBalance(props.quote.receive.amountUnits, props.quote.receive.token.decimals);
 });
+
+function parsePaymentMethod(paymentMethodId: PaymentMethod) {
+  switch (paymentMethodId) {
+    case "credit_card":
+      return "Credit card";
+    case "apple_pay_credit":
+      return "Apple Pay";
+    case "google_pay_credit":
+      return "Google Pay";
+    case "google_pay_debit":
+      return "Google Pay (Debit)";
+    case "apple_pay_debit":
+      return "Apple Pay (Debit)";
+    case "debit_card":
+      return "Debit card";
+    case "wire":
+      return "Wire transfer";
+    case "sepa":
+      return "SEPA transfer";
+    case "pix":
+      return "PIX";
+    case "ach":
+      return "ACH";
+    case "koywe":
+      return "Koywe";
+    default:
+      return paymentMethodId;
+  }
+}
 
 /* const providerType = computed(() => {
   switch (props.quote.provider.type) {
@@ -90,7 +124,54 @@ watch(toggleOpen, () => {
 const { setStep } = useOnRampStore();
 const { selectQuote } = useOrderProcessingStore();
 function runQuote() {
-  selectQuote(props.quote);
+  const routeToExecute = quoteToRoute("buy", props.quote, props.provider);
+  selectQuote(routeToExecute);
   setStep("processing");
 }
 </script>
+
+<style lang="scss" scoped>
+.details-section {
+  grid-area: details;
+}
+
+.amount-section {
+  grid-area: amount;
+}
+
+.provider-section {
+  grid-area: provider;
+  justify-self: end;
+}
+
+.quote-grid {
+  grid-template-areas:
+    "amount provider"
+    "details provider";
+}
+
+@media (max-width: 450px) {
+  .quote-grid {
+    grid-template-areas:
+      "amount"
+      "provider"
+      "details";
+  }
+
+  .provider-section {
+    justify-self: start;
+  }
+
+  .payment-method {
+    text-align: left;
+
+    & > div {
+      display: inline;
+
+      &:last-child {
+        @apply pl-0.5;
+      }
+    }
+  }
+}
+</style>
