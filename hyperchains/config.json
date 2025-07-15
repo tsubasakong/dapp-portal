@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "network": {
+      "id": 207788, 
+      "key": "heurist-testnet",
+      "name": "Heurist Testnet",
+      "rpcUrl": "https://enterprise.onerpc.com/apikey/V7wQOUMGr4GApVOMe2JO6cBiwTAawFnx/heurist_testnet",
+      "publicL1NetworkId": 11155111
+    },
+    "tokens": [
+      {
+        "address": "0x000000000000000000000000000000000000800A",
+        "l1Address": "0xeF866858fEdD64D20B6cB4359B09321E9301ef5D",
+        "symbol": "HEU",
+        "name": "Heurist Token",
+        "decimals": 18
+      }
+    ]
+  }
+]
